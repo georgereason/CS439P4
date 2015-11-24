@@ -14,6 +14,7 @@ libc:
 kernel: libc
 	$(MAKE) -C kernel
 	$(MAKE) -C user/hello
+	$(MAKE) -C user/tests
 .PHONY: kernel
 
 clean:
@@ -21,6 +22,7 @@ clean:
 	$(MAKE) -C kernel clean
 	$(MAKE) -C user/libc clean
 	$(MAKE) -C user/hello clean
+	$(MAKE) -C user/tests clean
 .PHONY: clean
 build: u-boot kernel
 run: 
