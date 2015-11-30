@@ -1,4 +1,6 @@
 #include <thread.h>
+#include <stdio.h>
+#include <fs_syscalls.h>
 
 /* 
  * \brief Creates a new thread.   
@@ -12,9 +14,10 @@
  *						    available to create the thread.
  *			ERR_INVALID_ARGUMENTS      if any of the arguments passed are not valid.		
  */
-int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
-{
-   return -10;
+int thread_create(thread_t *thread, void *(*func)(void*), void *arg) {
+	printf("Creating Thread \n");
+	__syscall3(17, 0, 0, 0);
+	return -10;
 }
 
 /* 
