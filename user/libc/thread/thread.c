@@ -13,6 +13,7 @@
  *						    available to create the thread.
  *			ERR_INVALID_ARGUMENTS      if any of the arguments passed are not valid.		
  */
+
 int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
 {
 	printf("USER SPACE THREAD CREATED\n");
