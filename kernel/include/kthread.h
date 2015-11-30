@@ -12,6 +12,7 @@
 typedef void (*kthread_callback_handler)();
 
 typedef struct kthread_handle {
+	int type;
     uint32_t parent_pid;
     int niceness;
     int state;

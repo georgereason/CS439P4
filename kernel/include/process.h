@@ -66,6 +66,7 @@ typedef enum PROCESS_STATE
 typedef struct pcb
 {
 	//ID data
+	int type;
 	char* name; /* for debugging purposes */
 	uint32_t PID;
 	uint32_t starting_address;

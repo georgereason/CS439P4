@@ -6,7 +6,8 @@
 
 void* f(void* arg)
 {
-   return arg;
+  printf("This is from the thread!!!!!!!!!!!!\n");
+  return arg;
 }
 
 int main() {

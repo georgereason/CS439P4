@@ -188,6 +188,20 @@ sched_task* sched_create_task_from_process(pcb * pcb_pointer, int niceness) {
     return __sched_create_task(pcb_pointer, niceness, PROCESS);
 }
 
+sched_task* sched_create_task(uint32_t * task, int niceness) {
+    int type = ((pcb *) task)->type;
+    os_printf("Task Type: %d\n", type);
+    if(type == 1){
+        vm_use_kernel_vas();
+        return sched_create_task_from_kthread((kthread_handle *) task, niceness);
+    }else if(type == 2){
+        return sched_create_task_from_process((pcb *) task, niceness);
+    }else{
+        os_printf("Error: bad type in sched_create_task\n");
+        return (sched_task *)-1;
+    }
+}
+
 
 // Helper function used by the scheduler internally. It will traverse the parent/child
 // list to find a subtask.

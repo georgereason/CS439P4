@@ -32,6 +32,7 @@ pcb* process_create(uint32_t* file_p)
 	if (free_space_in_pcb_table != 0)
 	{
 		pcb* pcb_pointer = (pcb*) kmalloc(sizeof(pcb));
+		pcb_pointer->type = 2;
 
 		//Create the process VAS here so that we can use it when allocating process memory
 		pcb_pointer->stored_vas = vm_new_vas();
