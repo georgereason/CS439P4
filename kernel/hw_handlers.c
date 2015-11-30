@@ -161,6 +161,9 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 
 		os_printf((const char*) r0);
 		return 0L;
+	case SYSCALL_THREADCREATE:
+		os_printf("Thread Create System Call Called!!!!!\n");
+		return 0L;
 	default:
 		os_printf("That wasn't a syscall you knob!\n");
 		return -1L;
