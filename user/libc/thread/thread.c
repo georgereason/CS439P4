@@ -1,4 +1,5 @@
 #include <thread.h>
+#include "../libc/arch/arm/syscall_arch.h"
 
 /* 
  * \brief Creates a new thread.   
@@ -14,7 +15,9 @@
  */
 int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
 {
-   return -10;
+	printf("USER SPACE THREAD CREATED\n");
+	__syscall1(17, 0);
+	return -9;
 }
 
 /* 

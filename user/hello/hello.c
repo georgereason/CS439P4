@@ -29,15 +29,15 @@ int main() {
     printf("success\n");
 
     //Start of the thread tests
-   printf("George is awesome, trevor sux\n");
+  // printf("George is awesome, trevor sux\n");
    thread_t thread;
-   thread_create(&thread, f, (void*) 1);
+   int res = thread_create(&thread, f, (void*) 1);
 
    //Thread test 2
-   int res=0;
+   //int res=0;
 
-   thread_join(thread, (void**) &res);
-   assert(res==1);
+   //thread_join(thread, (void**) &res);
+   assert(res==-9);
 
     while(1);
 }
