@@ -12,10 +12,11 @@
 
 kthread_handle* kthread_create(kthread_callback_handler cb_handler)
 {
-	os_printf("Inside KThread Create\n");
+	os_printf("Pre malloc\n");
+	vm_use_kernel_vas();
 	kthread_handle * kthread = kmalloc(sizeof(kthread_handle));
 	kthread->cb_handler = cb_handler;
-	return (kthread_handle *)-1;
+	return kthread;
 }
 
 uint32_t kthread_start(kthread_handle * kthread)

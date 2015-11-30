@@ -33,6 +33,7 @@ int main() {
   thread_t thread;
   thread_create(&thread, f, (void*) 1);
 
+  printf("Thread address %x\n", &thread);
   //Thread test 2
   int res=0;
 
