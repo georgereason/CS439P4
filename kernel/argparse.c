@@ -5,6 +5,7 @@
 #include "tests.h"
 #include "process.h"
 #include "fs/file.h"
+#include "scheduler.h"
 
 static void argparse_parse(char *);
 
@@ -129,8 +130,10 @@ static void argparse_parse(char *cmdline)
 
 			}
 
-			execute_process(proc);
-
+			os_printf("PARSING CMDLINE PROCESS\n");
+			sched_task * task = sched_create_task((uint32_t *) proc, 0);
+			os_printf("CMDLINE TASK CREATED\n");
+			sched_add_task(task);
 			os_printf("AFTER EXECUTE_PROCESS\n");
 		}
 		else if (os_strcmp("-test", token) == 0)

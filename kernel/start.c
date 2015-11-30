@@ -32,7 +32,7 @@
 #include "mem_alloc.h"
 #include "tests.h"
 #include "drivers/timer.h"
-// #include "scheduler.h"
+#include "scheduler.h"
 
 // Tests
 #include "tests/test_klibc.h"
@@ -103,18 +103,20 @@ void start2(uint32_t *p_bootargs)
 
 	// initialize the timers
 	initialize_timers();
-
 	//assert(1==2 && "Test assert please ignore");
+
 	init_all_processes();
 
 	// FIXME: temporary
 	os_printf("Programming the timer interrupt\n");
 	start_timer_interrupts(0, 10);
+	sched_init();
 
 
 	argparse_process(p_bootargs);
 
 	print_uart0("done parsing atag list\n");
+
 
 	//init_kheap(31 * 0x100000);
 	//init_uheap(0x100000);

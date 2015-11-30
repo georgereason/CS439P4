@@ -92,10 +92,11 @@ sched_task* __sched_find_subtask(sched_task * parent_task, uint32_t pid);
 uint32_t sched_init() {
 	vm_use_kernel_vas();
 
-    os_printf("Initializing scheduler\n");
+    os_printf("Initializing scheduler..................................................................................................\n");
     last_err = "No error";
     inactive_tasks = prq_create_fixed(MAX_TASKS);
     active_tasks = prq_create_fixed(MAX_ACTIVE_TASKS);
+    all_tasks_map = hmap_create_fixed(MAX_TASKS);
     active_task = 0;
 
     __sched_register_timer_irq();
@@ -154,10 +155,10 @@ sched_task* __sched_create_task(void * task_data, int niceness, uint32_t type) {
 
     __sched_pause_timer_irq();
 
+    vm_use_kernel_vas();
     sched_task * task = (sched_task*) kmalloc(sizeof(sched_task));
 
     niceness = SAFE_NICE(niceness);
-
     task->tid = ++sched_tid;
     task->niceness = niceness;
     task->task = task_data;
@@ -192,7 +193,6 @@ sched_task* sched_create_task(uint32_t * task, int niceness) {
     int type = ((pcb *) task)->type;
     os_printf("Task Type: %d\n", type);
     if(type == 1){
-        vm_use_kernel_vas();
         return sched_create_task_from_kthread((kthread_handle *) task, niceness);
     }else if(type == 2){
         return sched_create_task_from_process((pcb *) task, niceness);
@@ -332,11 +332,11 @@ void __sched_dispatch(void) {
         last_task = (sched_task*) node->data;
     }
 
+            //os_printf("Scheduling something.................................................................................................\n");  
     switch (last_task->state) {
         case TASK_STATE_INACTIVE: {
             active_task = last_task;
             active_task->state = TASK_STATE_ACTIVE;
-
             if (IS_PROCESS(active_task)) {
                 vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                 __sched_resume_timer_irq();
@@ -399,6 +399,7 @@ void __sched_dispatch(void) {
 
 // start process
 uint32_t sched_add_task(sched_task * task) {
+    vm_use_kernel_vas();    
     if (task) {
         if (task->state != TASK_STATE_NONE) {
             last_err = "Reusing task object not allowed";
@@ -406,7 +407,6 @@ uint32_t sched_add_task(sched_task * task) {
         }
 
         // use the kernel memory
-        vm_use_kernel_vas();
 
         prq_node * new_node = (prq_node*) kmalloc(sizeof(prq_node));
         new_node->data = task;
@@ -416,7 +416,9 @@ uint32_t sched_add_task(sched_task * task) {
         task->node = new_node;
         prq_enqueue(inactive_tasks, new_node);
 
+            os_printf("Adding task..............................................................\n");
         hmap_put(all_tasks_map, active_task->tid, active_task);
+            os_printf("Adding task..............................................................\n");
 
         if (IS_PROCESS(active_task)) {
             vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
