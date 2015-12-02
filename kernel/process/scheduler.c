@@ -493,6 +493,16 @@ uint32_t sched_set_niceness(uint32_t pid, uint32_t niceness) {
     return STATUS_OK;
 }
 
+uint32_t sched_get_active_pid(){
+    if(AS_PROCESS(active_task)->type == 2){
+        return AS_PROCESS(active_task)->PID;
+    }else if(AS_KTHREAD(active_task)->type == 1){
+        return AS_KTHREAD(active_task)->parent_pid;
+    }else{
+        return -1;
+    }
+}
+
 uint32_t sched_post_message(uint32_t dest_pid, uint32_t event, char * data,
         int len)
 {

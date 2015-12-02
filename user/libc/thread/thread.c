@@ -1,4 +1,5 @@
 #include <thread.h>
+#include <stdio.h>
 #include "../libc/arch/arm/syscall_arch.h"
 
 /* 
@@ -17,8 +18,9 @@
 int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
 {
 	printf("USER SPACE THREAD CREATED\n");
-	__syscall1(17, 0);
-	return -9;
+	printf("Function %x\n", (uint32_t) func);
+	__syscall1(17, (uint32_t) func);
+	return 1;
 }
 
 /* 

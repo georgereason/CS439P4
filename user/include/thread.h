@@ -1,4 +1,5 @@
 typedef struct thread * thread_t;
+typedef unsigned int    uint32_t;
 
 #define ERR_INSUFFICIENT_RESOURCES	-1
 #define ERR_INVALID_ARGUMENTS		-2
