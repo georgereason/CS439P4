@@ -19,8 +19,11 @@ int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
 {
 	printf("USER SPACE THREAD CREATED\n");
 	printf("Function %x\n", (uint32_t) func);
-	__syscall1(17, (uint32_t) func);
-	return 1;
+	if((uint32_t) func != 0 && thread != 0){
+		return __syscall2(17, (uint32_t) func, (uint32_t) arg);;
+	}else{
+		return ERR_INVALID_ARGUMENTS;
+	}
 }
 
 /* 

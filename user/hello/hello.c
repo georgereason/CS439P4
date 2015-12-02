@@ -6,7 +6,10 @@
 
 void* f(void* arg)
 {
-  printf("This is from the thread!!!!!!!!!!!!\n");
+
+    int i = 0;
+    //for(;i< 1000000; i++){
+  printf("This is from the thread!!!!!!!!!!!!\n");//} 
   return arg;
 }
 
@@ -46,6 +49,8 @@ int main() {
   printf("End of thread tests\n");
 
   while(1){
-    
+    printf("inside process\n");
+    int i = 0;
+    for(;i< 100000000; i++){}
   }
 }

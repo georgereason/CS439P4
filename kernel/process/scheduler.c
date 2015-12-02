@@ -345,16 +345,15 @@ void __sched_dispatch(void) {
             active_task = last_task;
             active_task->state = TASK_STATE_ACTIVE;
             os_printf("Scheduling Inactive.................................................................................................\n");  
-            if (IS_PROCESS(active_task)) {
+            if (AS_PROCESS(active_task)->type == 2) {
                 os_printf("Scheduling inactive process.................................................................................................\n");  
                 vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                 __sched_resume_timer_irq();
                 execute_process(AS_PROCESS(active_task));
-            } else if (IS_KTHREAD(active_task)) {
+            } else if (AS_PROCESS(active_task)->type == 1) {
                 os_printf("Scheduling inactive thread.................................................................................................\n");  
-                AS_KTHREAD(active_task)->cb_handler();
-                }
-            os_printf("Heree..............................................\n");
+                kthread_load_state(AS_KTHREAD(active_task));
+            }
             __sched_pause_timer_irq();
             sched_remove_task(active_task->tid);
             active_task = 0;
