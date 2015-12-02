@@ -401,9 +401,8 @@ void __sched_dispatch(void) {
                 } else if (AS_PROCESS(active_task)->type == 1) { //is thread
                     __sched_emit_messages();
                     os_printf("Loading new thread.................................................................................................\n");  
-
                     // FIXME: implement
-                    // kthread_load_state(AS_KTHREAD(active_task));
+                    kthread_load_state(AS_KTHREAD(active_task));
                 }
             }
             break;

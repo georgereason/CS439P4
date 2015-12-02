@@ -26,3 +26,8 @@ uint32_t kthread_start(kthread_handle * kthread)
 	return sched_add_task(task);
 }
 
+void kthread_load_state(kthread_handle * kthread) {
+	os_printf("Switching To Thread\n");
+	//LOAD THE THREAD STATE HERE TO SWITCH TO IT
+}
+
