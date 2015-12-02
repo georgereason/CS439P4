@@ -18,7 +18,7 @@ _Static_assert (sizeof (rasp_pi_timer) == 28, "rasp_pi_timer check");
 void initialize_timers();
 int set_load_value(int timer_index, int value);
 int set_background_load_value(int timer_index, int value);
-int clear_interupt(int timer_index);
+int clear_interrupt(int timer_index);
 int set_32_bit_mode(int timer_index);
 int get_current_timer_value(int timer_index);
 int set_periodic_mode(int timer_index);

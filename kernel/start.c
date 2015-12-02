@@ -103,13 +103,14 @@ void start2(uint32_t *p_bootargs)
 
 	// initialize the timers
 	initialize_timers();
+	
 	//assert(1==2 && "Test assert please ignore");
 
 	init_all_processes();
 
 	// FIXME: temporary
 	os_printf("Programming the timer interrupt\n");
-	start_timer_interrupts(0, 10);
+	start_timer_interrupts(0, 5);
 	sched_init();
 
 

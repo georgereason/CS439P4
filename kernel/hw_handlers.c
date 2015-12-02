@@ -231,6 +231,10 @@ void __attribute__((interrupt("IRQ"))) irq_handler(void)
 	// which interrupt lines need to be tended to
 	for (i = 0; i < MAX_NUM_INTERRUPTS; i++)
 	{
+		if(i == 3) {
+			handle_irq_interrupt(i);
+		} 
+
 		// is the line active?
 		if ((1 << i) & mmio_read(VIC_IRQ_STATUS))
 		{
@@ -256,6 +260,10 @@ void __attribute__((interrupt("FIQ"))) fiq_handler(void)
 	// which interrupt lines need to be tended to
 	for (i = 0; i < MAX_NUM_INTERRUPTS; i++)
 	{
+		if(i == 3) {
+			handle_irq_interrupt(i);
+		} 
+
 		// is the line active?
 		if ((1 << i) & mmio_read(VIC_FIQ_STATUS))
 		{

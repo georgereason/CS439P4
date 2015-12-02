@@ -4,9 +4,11 @@
 #include "klibc.h"
 #include "process.h"
 #include "kthread.h"
+#include "interrupt.h"
 #include "data_structures/linked_list.h"
 #include "data_structures/hash_map.h"
 #include "data_structures/array_list.h"
+#include "drivers/timer.h"
 
 #define MAX_TASKS 100   // in the future, cap will be removed
 #define MAX_ACTIVE_TASKS 4  // in the future, will dynamically change based on load
@@ -30,7 +32,6 @@ static prq_handle * inactive_tasks;
 static prq_handle * active_tasks;
 static sched_task * active_task;
 static hmap_handle * all_tasks_map;
-
 // NOTE
 // scheduler logic only. not tested
 
@@ -54,12 +55,17 @@ static hmap_handle * all_tasks_map;
 // exec: start a process which you created before
 // waitpid: wait for a process (i.e. child) to finish
 // kill: kill a process and its children processes
-//
 
+void __sched_dispatch();
+//
 void __sched_register_timer_irq(void)
 {
 	// TODO: register the timer here
+    interrupt_handler_t *handler = kmalloc(sizeof(interrupt_handler_t));
+    handler->handler = __sched_dispatch;
+    register_interrupt_handler(3, handler);
 }
+
 
 void __sched_deregister_timer_irq()
 {
@@ -157,7 +163,6 @@ sched_task* __sched_create_task(void * task_data, int niceness, uint32_t type) {
 
     vm_use_kernel_vas();
     sched_task * task = (sched_task*) kmalloc(sizeof(sched_task));
-
     niceness = SAFE_NICE(niceness);
     task->tid = ++sched_tid;
     task->niceness = niceness;
@@ -182,6 +187,7 @@ sched_task* __sched_create_task(void * task_data, int niceness, uint32_t type) {
 
 sched_task* sched_create_task_from_kthread(kthread_handle * kthread,
         int niceness) {
+    //sched_task * task = __sched_create_task(kthread, niceness, KTHREAD);
     return __sched_create_task(kthread, niceness, KTHREAD);
 }
 
@@ -305,6 +311,7 @@ uint32_t sched_remove_task(uint32_t tid) {
 }
 
 void __sched_dispatch(void) {
+    os_printf("In dispatch!!........\n");
     // prevent interrupts while handling another interrupt
     __sched_pause_timer_irq();
 
@@ -332,19 +339,22 @@ void __sched_dispatch(void) {
         last_task = (sched_task*) node->data;
     }
 
-            //os_printf("Scheduling something.................................................................................................\n");  
+    os_printf("Scheduling something.................................................................................................\n");  
     switch (last_task->state) {
         case TASK_STATE_INACTIVE: {
             active_task = last_task;
             active_task->state = TASK_STATE_ACTIVE;
+            os_printf("Scheduling Inactive.................................................................................................\n");  
             if (IS_PROCESS(active_task)) {
+                os_printf("Scheduling inactive process.................................................................................................\n");  
                 vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                 __sched_resume_timer_irq();
                 execute_process(AS_PROCESS(active_task));
             } else if (IS_KTHREAD(active_task)) {
+                os_printf("Scheduling inactive thread.................................................................................................\n");  
                 AS_KTHREAD(active_task)->cb_handler();
-            }
-
+                }
+            os_printf("Heree..............................................\n");
             __sched_pause_timer_irq();
             sched_remove_task(active_task->tid);
             active_task = 0;
@@ -355,12 +365,14 @@ void __sched_dispatch(void) {
         }
         case TASK_STATE_ACTIVE: {
             if (prq_count(active_tasks) > 1) {
+                
                 prq_remove(active_tasks, active_task->node);
                 prq_enqueue(active_tasks, active_task->node);
                 sched_task * next_task = (sched_task*) prq_peek(active_tasks)->data;
-
+                os_printf("Scheduling active.................................................................................................\n");  
                 // old task
                 if (IS_PROCESS(active_task)) {
+                    os_printf("Scheduling active process.................................................................................................\n");  
                     if (active_task == next_task) {
                         vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                         break;
@@ -368,7 +380,9 @@ void __sched_dispatch(void) {
 
                     save_process_state(AS_PROCESS(last_task)->PID);
                 } else if (IS_KTHREAD(active_task)) {
+                    os_printf("Scheduling active thread.................................................................................................\n");  
                     if (active_task == next_task) {
+                        
                         break;
                     }
 
@@ -379,12 +393,14 @@ void __sched_dispatch(void) {
                 active_task = next_task;
 
                 // new task
-                if (IS_PROCESS(active_task)){
+                if (AS_PROCESS(active_task)->type != 1){//is process
                     vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                     __sched_emit_messages();
+                    os_printf("Loading new process.................................................................................................\n");  
                     load_process_state(AS_PROCESS(active_task)->PID); // continue with the next process
-                } else if (IS_KTHREAD(active_task)) {
+                } else if (AS_PROCESS(active_task)->type == 1) { //is thread
                     __sched_emit_messages();
+                    os_printf("Loading new thread.................................................................................................\n");  
 
                     // FIXME: implement
                     // kthread_load_state(AS_KTHREAD(active_task));
@@ -424,6 +440,11 @@ uint32_t sched_add_task(sched_task * task) {
             vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
         } else if (IS_KTHREAD(active_task)) {
             // ignore
+        }
+    
+        //Schedule dispatch if no other task is there
+        if ((prq_count(active_tasks) == 0) && (prq_count(inactive_tasks) == 1)) { 
+            __sched_dispatch();
         }
 
         return active_task->tid;

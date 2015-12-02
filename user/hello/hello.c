@@ -40,10 +40,12 @@ int main() {
 
   thread_join(thread, (void**) &res);
   printf("Before Assert thread tests\n");
-  assert(res==1);
+  //assert(res==1);
 
-   
+  
   printf("End of thread tests\n");
 
-  while(1);
+  while(1){
+    
+  }
 }
