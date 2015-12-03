@@ -6,6 +6,17 @@ typedef unsigned int    uint32_t;
 #define ERR_INVALID_THREAD		-3
 #define ERR_THREAD_TERMINATED		-4
 
+
+typedef void (*kthread_callback_handler)();
+
+typedef struct kthread_handle {
+	int type;
+    uint32_t parent_pid;
+    int niceness;
+    int state;
+    kthread_callback_handler cb_handler;
+} kthread_handle;
+
 /* 
  * \brief Creates a new thread.   
  *

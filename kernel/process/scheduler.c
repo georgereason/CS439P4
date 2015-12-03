@@ -75,10 +75,14 @@ void __sched_deregister_timer_irq()
 void __sched_pause_timer_irq()
 {
 	// TODO: suspend the timer here
+    disable_interrupt(FIQ_MASK);
+    disable_interrupt(IRQ_MASK);
 }
 
 void __sched_resume_timer_irq()
 {
+    enable_interrupt(IRQ_MASK);
+    enable_interrupt(FIQ_MASK);
 	// TODO: resume the timer here
 }
 
@@ -352,6 +356,7 @@ void __sched_dispatch(void) {
                 execute_process(AS_PROCESS(active_task));
             } else if (AS_PROCESS(active_task)->type == 1) {
                 os_printf("Scheduling inactive thread.................................................................................................\n");  
+                __sched_resume_timer_irq();
                 kthread_load_state(AS_KTHREAD(active_task));
             }
             __sched_pause_timer_irq();
@@ -400,7 +405,6 @@ void __sched_dispatch(void) {
                 } else if (AS_PROCESS(active_task)->type == 1) { //is thread
                     __sched_emit_messages();
                     os_printf("Loading new thread.................................................................................................\n");  
-                    // FIXME: implement
                     kthread_load_state(AS_KTHREAD(active_task));
                 }
             }
