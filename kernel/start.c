@@ -32,6 +32,10 @@
 #include "mem_alloc.h"
 #include "tests.h"
 #include "drivers/timer.h"
+<<<<<<< HEAD
+=======
+#include "kthread.h"
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 #include "scheduler.h"
 
 // Tests
@@ -108,11 +112,12 @@ void start2(uint32_t *p_bootargs)
 
 	init_all_processes();
 
+	sched_init();
+
 	// FIXME: temporary
 	os_printf("Programming the timer interrupt\n");
 	start_timer_interrupts(0, 5);
 	sched_init();
-
 
 	argparse_process(p_bootargs);
 

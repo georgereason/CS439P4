@@ -1,12 +1,6 @@
 #include <thread.h>
-<<<<<<< HEAD
-#include <stdio.h>
-#include "../libc/arch/arm/syscall_arch.h"
-#include <fs_syscalls.h>
-=======
 #include <assert.h>
 #include <stdio.h>
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 
 void* f(void* arg)
 {
@@ -14,12 +8,15 @@ void* f(void* arg)
 
    assert(((int)arg) == 1);
 
+   thread_exit(arg);
+
+   assert(0 && "Unreachable");
+
    return arg;
 }
 
 void main(void)
 {
-   printf("George is awesome, trevor sux\n");
    thread_t thread;
 
    printf("before thread_create\n");

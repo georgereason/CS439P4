@@ -1,10 +1,14 @@
 #include "global_defs.h"
+#include "kthread.h"
 #include "scheduler.h"
 #include "vm.h"
 #include "klibc.h"
 #include "process.h"
+<<<<<<< HEAD
 #include "kthread.h"
 #include "interrupt.h"
+=======
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 #include "data_structures/linked_list.h"
 #include "data_structures/hash_map.h"
 #include "data_structures/array_list.h"
@@ -24,14 +28,20 @@
 
 #define AS_PROCESS(a) ((pcb*) a->task)
 #define AS_KTHREAD(a) ((kthread_handle*) a->task)
-#define IS_PROCESS(a) (a->state == PROCESS)
-#define IS_KTHREAD(a) (a->state == KTHREAD)
+#define IS_PROCESS(a) (a->type == PROCESS)
+#define IS_KTHREAD(a) (a->type == KTHREAD)
 
 static char *last_err;
 static prq_handle * inactive_tasks;
 static prq_handle * active_tasks;
 static sched_task * active_task;
 static hmap_handle * all_tasks_map;
+<<<<<<< HEAD
+=======
+
+static uint32_t sched_tid;
+
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 // NOTE
 // scheduler logic only. not tested
 
@@ -55,21 +65,37 @@ static hmap_handle * all_tasks_map;
 // exec: start a process which you created before
 // waitpid: wait for a process (i.e. child) to finish
 // kill: kill a process and its children processes
+<<<<<<< HEAD
+=======
+//
+#define SCHEDULER_TIMER 0
+
+void __sched_dispatch(void);
+
+void timer_handler(void *args)
+{
+	os_printf("scheduler received timer interrupt, need to switch tasks...\n");
+}
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 
 void __sched_dispatch();
 //
 void __sched_register_timer_irq(void)
 {
+<<<<<<< HEAD
 	// TODO: register the timer here
     interrupt_handler_t *handler = kmalloc(sizeof(interrupt_handler_t));
     handler->handler = __sched_dispatch;
     register_interrupt_handler(3, handler);
+=======
+	register_handler(SCHEDULER_TIMER, timer_handler);
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 }
 
 
 void __sched_deregister_timer_irq()
 {
-	// TODO: unregister the timer here
+	unregister_handler(SCHEDULER_TIMER);
 }
 
 void __sched_pause_timer_irq()
@@ -91,12 +117,11 @@ uint32_t sched_get_active_tid() {
     return (uint32_t) STATUS_FAIL;
 }
 
-
-sched_task* __sched_find_subtask(sched_task * parent_task, uint32_t pid);
-
 // Initialize the scheduler. Should be called by the kernel ONLY
-uint32_t sched_init() {
-	vm_use_kernel_vas();
+uint32_t sched_init(void) {
+	ensure_kernel_vas();
+
+	sched_tid = 0;
 
     os_printf("Initializing scheduler..................................................................................................\n");
     last_err = "No error";
@@ -105,9 +130,17 @@ uint32_t sched_init() {
     all_tasks_map = hmap_create_fixed(MAX_TASKS);
     active_task = 0;
 
+    all_tasks_map = hmap_create();
+
     __sched_register_timer_irq();
 
     return STATUS_OK;
+}
+
+// initial call that causes the scheduler to start
+void sched_start(void)
+{
+	__sched_dispatch();
 }
 
 uint32_t sched_register_callback_handler(sched_callback_handler cb_handler) {
@@ -125,7 +158,7 @@ uint32_t sched_deregister_callback_handler() {
 
 // Free the resources used the scheduler
 uint32_t sched_free() {
-	vm_use_kernel_vas();
+	ensure_kernel_vas();
 
     // FIXME kill active tasks
 
@@ -136,8 +169,6 @@ uint32_t sched_free() {
 
     return STATUS_OK;
 }
-
-static uint32_t sched_tid = 0;
 
 // issue messages for the active task
 void __sched_emit_messages(void) {
@@ -266,7 +297,6 @@ uint32_t __sched_remove_task(sched_task * task) {
             task->state = TASK_STATE_FINISHED;
 
             if (IS_PROCESS(task)) {
-                vm_use_kernel_vas();
                 free_PCB(AS_PROCESS(task));
             } else if (IS_KTHREAD(task)) {
                 // FIXME add later
@@ -344,10 +374,15 @@ void __sched_dispatch(void) {
         case TASK_STATE_INACTIVE: {
             active_task = last_task;
             active_task->state = TASK_STATE_ACTIVE;
+<<<<<<< HEAD
             os_printf("Scheduling Inactive.................................................................................................\n");  
             if (AS_PROCESS(active_task)->type == 2) {
                 os_printf("Scheduling inactive process.................................................................................................\n");  
                 vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
+=======
+
+            if (IS_PROCESS(active_task)) {
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
                 __sched_resume_timer_irq();
                 execute_process(AS_PROCESS(active_task));
             } else if (AS_PROCESS(active_task)->type == 1) {
@@ -377,7 +412,7 @@ void __sched_dispatch(void) {
                         break;
                     }
 
-                    save_process_state(AS_PROCESS(last_task)->PID);
+                    save_process_state(AS_PROCESS(last_task));
                 } else if (IS_KTHREAD(active_task)) {
                     os_printf("Scheduling active thread.................................................................................................\n");  
                     if (active_task == next_task) {
@@ -395,9 +430,14 @@ void __sched_dispatch(void) {
                 if (AS_PROCESS(active_task)->type != 1){//is process
                     vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                     __sched_emit_messages();
+<<<<<<< HEAD
                     os_printf("Loading new process.................................................................................................\n");  
                     load_process_state(AS_PROCESS(active_task)->PID); // continue with the next process
                 } else if (AS_PROCESS(active_task)->type == 1) { //is thread
+=======
+                    load_process_state(AS_PROCESS(active_task)); // continue with the next process
+                } else if (IS_KTHREAD(active_task)) {
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
                     __sched_emit_messages();
                     os_printf("Loading new thread.................................................................................................\n");  
                     // FIXME: implement
@@ -420,7 +460,11 @@ uint32_t sched_add_task(sched_task * task) {
             return (uint32_t) STATUS_FAIL;
         }
 
+<<<<<<< HEAD
         // use the kernel memory
+=======
+        ensure_kernel_vas();
+>>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 
         prq_node * new_node = (prq_node*) kmalloc(sizeof(prq_node));
         new_node->data = task;

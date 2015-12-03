@@ -1,12 +1,6 @@
 #include <thread.h>
-<<<<<<< HEAD
-#include <stdio.h>
-#include "../libc/arch/arm/syscall_arch.h"
-#include <fs_syscalls.h>
-=======
 #include <assert.h>
 #include <stdio.h>
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 
 void* f(void* arg)
 {
@@ -19,7 +13,6 @@ void* f(void* arg)
 
 void main(void)
 {
-   printf("George is awesome, trevor sux\n");
    thread_t thread;
 
    printf("before thread_create\n");
@@ -27,7 +20,11 @@ void main(void)
    int rc = thread_create(&thread, f, (void*) 1);
    assert(rc == 0);
 
-   printf("after thread_create\n");
+   int id = thread_get_id(thread);
+
+   assert(id > 0);
+
+   printf("passed\n");
 
    while(1) { }
 }
