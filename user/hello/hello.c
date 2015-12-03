@@ -7,9 +7,8 @@
 void* f(void* arg)
 {
 
-    int i = 0;
-    //for(;i< 1000000; i++){
   printf("This is from the thread!!!!!!!!!!!!\n");//} 
+  while(1);
   return arg;
 }
 
@@ -36,8 +35,8 @@ int main() {
   printf("Start of thread tests\n");
   thread_t thread;
   thread_create(&thread, f, (void*) 1);
-
-  printf("Thread address %x\n", &thread);
+  
+  printf("Thread address %x\n", thread);
   //Thread test 2
   int res=0;
 
@@ -49,8 +48,6 @@ int main() {
   printf("End of thread tests\n");
 
   while(1){
-    printf("inside process\n");
-    int i = 0;
-    for(;i< 100000000; i++){}
+    
   }
 }
