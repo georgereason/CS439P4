@@ -330,6 +330,10 @@ uint32_t sched_remove_task(uint32_t tid) {
     return STATUS_FAIL;
 }
 
+sched_task* sched_get_active_task() {
+    return active_task;
+}
+
 void __sched_dispatch(void) {
     os_printf("In dispatch!!........\n");
     // prevent interrupts while handling another interrupt
