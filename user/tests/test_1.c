@@ -8,7 +8,7 @@
 void* f(void* arg)
 {
    printf("this is the thread\n");
-
+   printf("Arg address: %x\n", arg);
    assert(((int)arg) == 1);
 
    return arg;

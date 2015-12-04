@@ -17,6 +17,25 @@ typedef struct kthread_handle {
     int niceness;
     int state;
     kthread_callback_handler cb_handler;
+	uint32_t R0;
+	uint32_t R1;
+	uint32_t R2;
+	uint32_t R3;
+	uint32_t R4;
+	uint32_t R5;
+	uint32_t R6;
+	uint32_t R7;
+
+	//banked registers
+	uint32_t R8;
+	uint32_t R9;
+	uint32_t R10;
+	uint32_t R11;
+	uint32_t R12;
+	uint32_t R13; //corresponds to the SP; do we need both?
+	uint32_t R14;
+	uint32_t R15; //corresponds to the PC; do we need both?
+	
 } kthread_handle;
 
 
