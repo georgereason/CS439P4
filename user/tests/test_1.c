@@ -1,12 +1,9 @@
 #include <thread.h>
-<<<<<<< HEAD
 #include <stdio.h>
 #include "../libc/arch/arm/syscall_arch.h"
 #include <fs_syscalls.h>
-=======
 #include <assert.h>
 #include <stdio.h>
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 
 void* f(void* arg)
 {

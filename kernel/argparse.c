@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "global_defs.h"
 #include "argparse.h"
+#include "kthread.h"
 #include "klibc.h"
 #include "tests.h"
 #include "process.h"

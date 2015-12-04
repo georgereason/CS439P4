@@ -32,10 +32,7 @@
 #include "mem_alloc.h"
 #include "tests.h"
 #include "drivers/timer.h"
-<<<<<<< HEAD
-=======
 #include "kthread.h"
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 #include "scheduler.h"
 
 // Tests
