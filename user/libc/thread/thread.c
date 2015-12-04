@@ -15,12 +15,12 @@
  *			ERR_INVALID_ARGUMENTS      if any of the arguments passed are not valid.		
  */
 
-int thread_create(thread_t *thread, void *(*func)(void*), void *arg)
+int thread_create(thread_t *thread, void *(*func)(void*), void *arg) 
 {
-	printf("USER SPACE THREAD CREATED\n");
-	printf("Function %x\n", (uint32_t) func);
+	printf("USER SPACE THREAD CREATED............................................\n");
+	printf("CB Function %d............................................\n", func);
 	if((uint32_t) func != 0 && thread != 0){
-		*thread = __syscall2(17, (uint32_t) func, (uint32_t) arg);
+		*thread = (thread_t) __syscall2(17, (uint32_t) func, (uint32_t) arg);
 		return 0;
 	}else{
 		return ERR_INVALID_ARGUMENTS;

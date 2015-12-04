@@ -12,6 +12,7 @@ libc:
 	$(MAKE) -C user/libc
 
 kernel: libc
+	$(MAKE) -C user/libc
 	$(MAKE) -C kernel
 	$(MAKE) -C user/hello
 	$(MAKE) -C user/tests

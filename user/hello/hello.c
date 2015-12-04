@@ -22,7 +22,7 @@ int main() {
 	int* mem = 0;
 	mem = (int*) malloc(100);
 
-	printf("malloc returned %x\n", mem);
+	/*printf("malloc returned %x\n", mem);
 
 	mem[0] = 1;
 	mem[10] = 2;
@@ -31,7 +31,7 @@ int main() {
 
     printf("success\n");
 
-  //Start of the thread tests
+  //Start of the thread tests*/
   printf("Start of thread tests\n");
   thread_t thread;
   thread_create(&thread, f, (void*) 1);

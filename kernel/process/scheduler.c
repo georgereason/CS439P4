@@ -366,6 +366,7 @@ void __sched_dispatch(void) {
             active_task->state = TASK_STATE_ACTIVE;
 
             if (IS_PROCESS(active_task)) {
+                os_printf("Scheduling inactive proces.................................................................................................\n");  
                 __sched_resume_timer_irq();
                 execute_process(AS_PROCESS(active_task));
             } else if (AS_PROCESS(active_task)->type == 1) {
@@ -461,7 +462,7 @@ uint32_t sched_add_task(sched_task * task) {
     
         //Schedule dispatch if no other task is there
         if ((prq_count(active_tasks) == 0) && (prq_count(inactive_tasks) == 1)) { 
-            __sched_dispatch();
+           // __sched_dispatch();
         }
 
         return active_task->tid;

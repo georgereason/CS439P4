@@ -109,7 +109,6 @@ void start2(uint32_t *p_bootargs)
 
 	init_all_processes();
 
-	sched_init();
 
 	// FIXME: temporary
 	os_printf("Programming the timer interrupt\n");
