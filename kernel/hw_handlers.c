@@ -12,6 +12,7 @@
 #include "fs/file.h"
 #include "process.h"
 #include "kthread.h"
+#include "scheduler.h"
 
 /* copy vector table from wherever QEMU loads the kernel to 0x00 */
 void init_vector_table(void)
@@ -166,6 +167,10 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 		os_printf("KERNEL SPACE SYSTEM CALL - Thread Create\n");
 
 		return (long)kthread_create((kthread_callback_handler) r0);
+	case SYSCALL_ACTIVE_TASK:
+		os_printf("SYSTEM CALL - Get Active Task\n");
+
+		return (long) sched_get_active_task();
 	default:
 		os_printf("That wasn't a syscall you knob!\n");
 		return -1L;
@@ -233,10 +238,6 @@ void __attribute__((interrupt("IRQ"))) irq_handler(void)
 	// which interrupt lines need to be tended to
 	for (i = 0; i < MAX_NUM_INTERRUPTS; i++)
 	{
-		if(i == 3) {
-			handle_irq_interrupt(i);
-		} 
-
 		// is the line active?
 		if ((1 << i) & mmio_read(VIC_IRQ_STATUS))
 		{
@@ -262,10 +263,6 @@ void __attribute__((interrupt("FIQ"))) fiq_handler(void)
 	// which interrupt lines need to be tended to
 	for (i = 0; i < MAX_NUM_INTERRUPTS; i++)
 	{
-		if(i == 3) {
-			handle_irq_interrupt(i);
-		} 
-
 		// is the line active?
 		if ((1 << i) & mmio_read(VIC_FIQ_STATUS))
 		{

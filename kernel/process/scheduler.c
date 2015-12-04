@@ -67,12 +67,9 @@ void __sched_dispatch(void);
 
 void timer_handler(void *args)
 {
-	os_printf("scheduler received timer interrupt, need to switch tasks...\n");
+	__sched_dispatch();
 }
 
-
-void __sched_dispatch();
-//
 void __sched_register_timer_irq(void)
 {
 	register_handler(SCHEDULER_TIMER, timer_handler);
@@ -328,6 +325,10 @@ uint32_t sched_remove_task(uint32_t tid) {
     }
 
     return STATUS_FAIL;
+}
+
+sched_task* sched_get_active_task() {
+    return active_task;
 }
 
 void __sched_dispatch(void) {
