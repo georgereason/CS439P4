@@ -49,6 +49,7 @@ sched_task* sched_create_task(uint32_t* file_p, int niceness);
 sched_task* sched_create_task_from_kthread(kthread_handle * kthread, int niceness);
 sched_task* sched_create_task_from_process(pcb * pcb_pointer, int niceness);
 sched_task* sched_get_active_task();
+// int sched_get_thread_id();
 uint32_t sched_post_message(uint32_t dest_pid, uint32_t event, char * data, int len);
 uint32_t sched_register_callback_handler(sched_callback_handler cb_handler);
 uint32_t sched_deregister_callback_handler();

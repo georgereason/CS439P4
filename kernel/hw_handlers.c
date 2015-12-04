@@ -175,6 +175,10 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 		os_printf("SYSTEM CALL - Get Active Task\n");
 
 		return (long) sched_get_active_task();
+	// case SYSCALL_GET_THREADID: 
+	// 	os_printf("SYSTEM CALL - Get thread ID");
+
+	// 	return (long) sched_get_thread_id(r0);
 	default:
 		os_printf("That wasn't a syscall you knob!\n");
 		return -1L;

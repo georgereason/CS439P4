@@ -54,6 +54,7 @@
 #define SYSCALL_PRINTF 16
 #define SYSCALL_THREADCREATE 17
 #define SYSCALL_ACTIVE_TASK 18
+#define SYSCALL_GET_THREADID 19
 #define SYSCALL_DUMMY 99
 
 void init_vector_table(void); 

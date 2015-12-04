@@ -68,7 +68,7 @@ int thread_join(thread_t thread, void **result)
  */
 int thread_get_id(thread_t thread) 
 {
-	// *thread = __syscall2(17, (uint32_t) func, (uint32_t) arg);
+	// return __syscall1(19, thread);
 }
 
 /*
