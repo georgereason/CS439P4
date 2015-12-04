@@ -163,13 +163,7 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 		return 0L;
 	case SYSCALL_THREADCREATE:
 		os_printf("KERNEL SPACE SYSTEM CALL - Thread Create\n");
-		os_printf("KERNEL SPACE ARG: %d\n", r1);
-		kthread_handle * thread = kthread_create((kthread_callback_handler) r0);
-		os_printf("Thread Stack: %d\n", thread->R13 + 8);
-		uint32_t * address = (uint32_t *)thread->R13 + 8;
-		os_printf("Thread Stack Contains: %d\n", (*address));
-		(*address) = r1;
-		os_printf("Thread Now Stack Contains: %d\n", (*address));
+		kthread_handle * thread = kthread_create((kthread_callback_handler) r0, (void*) r1);
 		return (uint32_t) thread;
 	case SYSCALL_ACTIVE_TASK:
 		os_printf("SYSTEM CALL - Get Active Task\n");

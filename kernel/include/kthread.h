@@ -39,7 +39,7 @@ typedef struct kthread_handle {
 } kthread_handle;
 
 
-kthread_handle* kthread_create(kthread_callback_handler cb_handler);
+kthread_handle* kthread_create(kthread_callback_handler cb_handler, void* args);
 uint32_t kthread_start(kthread_handle * kthread);
 void kthread_load_state(kthread_handle * kthread);
 

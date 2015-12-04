@@ -17,8 +17,6 @@
 
 int thread_create(thread_t *thread, void *(*func)(void*), void *arg) 
 {
-	printf("USER SPACE THREAD CREATED............................................\n");
-	printf("CB Function %x...........................................\n", func);
 	if((uint32_t) func != 0 && thread != 0){
 		*thread = (thread_t) __syscall2(17, (uint32_t) func, (uint32_t) arg);
 		return 0;
