@@ -4,11 +4,8 @@
 #include "vm.h"
 #include "klibc.h"
 #include "process.h"
-<<<<<<< HEAD
 #include "kthread.h"
 #include "interrupt.h"
-=======
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 #include "data_structures/linked_list.h"
 #include "data_structures/hash_map.h"
 #include "data_structures/array_list.h"
@@ -36,12 +33,10 @@ static prq_handle * inactive_tasks;
 static prq_handle * active_tasks;
 static sched_task * active_task;
 static hmap_handle * all_tasks_map;
-<<<<<<< HEAD
-=======
 
 static uint32_t sched_tid;
 
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
+
 // NOTE
 // scheduler logic only. not tested
 
@@ -65,8 +60,6 @@ static uint32_t sched_tid;
 // exec: start a process which you created before
 // waitpid: wait for a process (i.e. child) to finish
 // kill: kill a process and its children processes
-<<<<<<< HEAD
-=======
 //
 #define SCHEDULER_TIMER 0
 
@@ -76,20 +69,13 @@ void timer_handler(void *args)
 {
 	os_printf("scheduler received timer interrupt, need to switch tasks...\n");
 }
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
+
 
 void __sched_dispatch();
 //
 void __sched_register_timer_irq(void)
 {
-<<<<<<< HEAD
-	// TODO: register the timer here
-    interrupt_handler_t *handler = kmalloc(sizeof(interrupt_handler_t));
-    handler->handler = __sched_dispatch;
-    register_interrupt_handler(3, handler);
-=======
 	register_handler(SCHEDULER_TIMER, timer_handler);
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
 }
 
 
@@ -378,15 +364,8 @@ void __sched_dispatch(void) {
         case TASK_STATE_INACTIVE: {
             active_task = last_task;
             active_task->state = TASK_STATE_ACTIVE;
-<<<<<<< HEAD
-            os_printf("Scheduling Inactive.................................................................................................\n");  
-            if (AS_PROCESS(active_task)->type == 2) {
-                os_printf("Scheduling inactive process.................................................................................................\n");  
-                vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
-=======
 
             if (IS_PROCESS(active_task)) {
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
                 __sched_resume_timer_irq();
                 execute_process(AS_PROCESS(active_task));
             } else if (AS_PROCESS(active_task)->type == 1) {
@@ -435,14 +414,9 @@ void __sched_dispatch(void) {
                 if (AS_PROCESS(active_task)->type != 1){//is process
                     vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                     __sched_emit_messages();
-<<<<<<< HEAD
-                    os_printf("Loading new process.................................................................................................\n");  
-                    load_process_state(AS_PROCESS(active_task)->PID); // continue with the next process
-                } else if (AS_PROCESS(active_task)->type == 1) { //is thread
-=======
                     load_process_state(AS_PROCESS(active_task)); // continue with the next process
                 } else if (IS_KTHREAD(active_task)) {
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
+
                     __sched_emit_messages();
                     os_printf("Loading new thread.................................................................................................\n");  
                     kthread_load_state(AS_KTHREAD(active_task));
@@ -464,11 +438,8 @@ uint32_t sched_add_task(sched_task * task) {
             return (uint32_t) STATUS_FAIL;
         }
 
-<<<<<<< HEAD
-        // use the kernel memory
-=======
         ensure_kernel_vas();
->>>>>>> 5654f859bb1ffa9785c9614da493190e57e46943
+
 
         prq_node * new_node = (prq_node*) kmalloc(sizeof(prq_node));
         new_node->data = task;
