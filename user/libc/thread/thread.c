@@ -66,7 +66,8 @@ int thread_join(thread_t thread, void **result)
  */
 int thread_get_id(thread_t thread) 
 {
-	// return __syscall1(19, thread);
+	int threadID = __syscall1(19, (long)thread);
+	return threadID;
 }
 
 /*

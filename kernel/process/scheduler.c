@@ -523,6 +523,11 @@ uint32_t sched_get_active_pid(){
     }
 }
 
+int sched_get_thread_id(uint32_t * kthread) {
+    //Need to get the thread ID here
+    return 10;
+}
+
 uint32_t sched_post_message(uint32_t dest_pid, uint32_t event, char * data,
         int len)
 {

@@ -1,0 +1,39 @@
+  ██████╗ ██████╗ ██╗   ██╗██████╗ ███████╗███████╗ ██████╗ ███████╗
+ ██╔════╝██╔═══██╗██║   ██║██╔══██╗██╔════╝██╔════╝██╔═══██╗██╔════╝
+ ██║     ██║   ██║██║   ██║██████╔╝███████╗█████╗  ██║   ██║███████╗
+ ██║     ██║   ██║██║   ██║██╔══██╗╚════██║██╔══╝  ██║   ██║╚════██║
+ ╚██████╗╚██████╔╝╚██████╔╝██║  ██║███████║███████╗╚██████╔╝███████║
+
+  PEER EVALUATION
+-----------------------------------------------------------------------
+
+1) Group members
+     Name 1: [George Reason]
+     - Rating: [5]  
+     Name 2: [Trevor Adam]
+     - Rating: [5] 
+     Name 3: [              ]
+     - Rating: [ ]  
+
+Notes: Rating can be:
+       [5] Excellent Contributor, outstanding contributions
+       [4] Solid Contributor, good team member
+       [3] Marginal Contributor, tried but could not get much done
+       [2] Unsatisfactory Contributor, was practically not involved much
+       [1] No show
+
+2) If you feel that your code does not reflect all the work that you put into
+   the project, you can summarize below what you tried to do, e.g., by describing
+   your intended design in sufficient technical detail. Also mention where you
+   had the biggest issues that prevented you from being more productive.
+
+   George and I spent around 25 hours working on this project, so far. We've been able to create a buggy scheduler that can schedule a thread and a process. We spent the majority of our time familiarizing ourselves with the codebase, but found it incredibly complex. So complex in fact that after spending about 10 hours learning the codebase, and not making much progress, we decided it would be better to try a “trial-by-fire” method of learning. 
+
+  Ultimately, we tried to create a system call that would instantiate a thread. Once the thread was created, a stack would be created based off of the calling processes PCB.
+
+  Currently we have successfully implemented 
+    -Create Thread, using a system call to create a thread and run it
+    -Scheudler, the scheduler runs threads and processes, it is a little buggy but it works 
+    -Self, we have a system call that returns the current active thread
+
+  Because of this we are passing Tests 8 and 9, we have been close to implementing passing an argument but not quite there yet, but we can run the thread. 

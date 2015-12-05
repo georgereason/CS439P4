@@ -4,6 +4,7 @@
 
 void main(void)
 {
+
    thread_self();
 
    printf("passed\n");

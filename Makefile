@@ -36,4 +36,4 @@ docs:
 	mv ./latex/refman.pdf course_os_docs.pdf
 
 submission:
-	git diff origin/project_a | gzip > submission.gz
+	git diff class/project_a | gzip > submission.gz

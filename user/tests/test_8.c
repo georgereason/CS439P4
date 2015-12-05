@@ -19,5 +19,7 @@ void main(void)
    int rc = thread_create(&thread, f, (void*) 1);
    assert(rc == 0);
 
+   printf("PASSED TEST 8");
+
    while (1) { }
 }
