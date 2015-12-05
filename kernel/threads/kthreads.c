@@ -10,7 +10,7 @@
 #include "scheduler.h"
 #include <global_defs.h>
 
-kthread_handle* kthread_create(kthread_callback_handler cb_handler, void* args)
+kthread_handle* kthread_create(kthread_callback_handler cb_handler)
 {
 	vm_use_kernel_vas();
 	kthread_handle * kthread = kmalloc(sizeof(kthread_handle));
@@ -36,11 +36,6 @@ kthread_handle* kthread_create(kthread_callback_handler cb_handler, void* args)
 	kthread->R13 = (uint32_t) kmalloc(sizeof(int) * 42);
 	kthread->R14 = pcb_p->R14;
 	kthread->R15 = (uint32_t) kthread->cb_handler;
-
-	//Put arguments on the stack here
-	printf("THREAD CREATE ARG VALUE %d\n", (uint32_t)args);
-	//Need to add this to the stack
-	kthread->R13 = (uint32_t) args;
 
 	kthread_start(kthread);
 	return kthread;
