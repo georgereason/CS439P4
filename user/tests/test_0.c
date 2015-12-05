@@ -4,8 +4,9 @@
 
 void* f(void* arg)
 {
+	
    printf("this is the thread\n");
-
+   printf("ARG: %d\n", (uint32_t) arg);
    assert(((int)arg) == 1);
 
    thread_exit(NULL);
