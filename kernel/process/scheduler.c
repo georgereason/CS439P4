@@ -40,15 +40,6 @@ static uint32_t sched_tid;
 // NOTE
 // scheduler logic only. not tested
 
-// FIXME
-// - add comments
-// - register interrupt
-// - deregister interrupts instead of flag
-// - optimize
-// - add error messages
-// - remove a task (and children)
-// - emitting and receiving messages!
-
 // scheduler
 // ---------
 // round-robin timer-enabled scheduler that runs tasks in descending priority
@@ -284,7 +275,7 @@ uint32_t __sched_remove_task(sched_task * task) {
             task->state = TASK_STATE_FINISHED;
 
             if (IS_PROCESS(task)) {
-                free_PCB(AS_PROCESS(task));
+                process_destroy(AS_PROCESS(task));
             } else if (IS_KTHREAD(task)) {
                 // FIXME add later
             }
@@ -373,7 +364,11 @@ void __sched_dispatch(void) {
             } else if (AS_PROCESS(active_task)->type == 1) {
                 os_printf("Scheduling inactive thread.................................................................................................\n");  
                 __sched_resume_timer_irq();
-                kthread_load_state(AS_KTHREAD(active_task));
+                //kthread_load_state(AS_KTHREAD(active_task));
+                //MAYBE ROMOVE IF BREAK
+                process_execute(AS_PROCESS(active_task));
+            } else if (IS_KTHREAD(active_task)) {
+                AS_KTHREAD(active_task)->cb_handler();
             }
             __sched_pause_timer_irq();
             sched_remove_task(active_task->tid);
@@ -398,7 +393,7 @@ void __sched_dispatch(void) {
                         break;
                     }
 
-                    save_process_state(AS_PROCESS(last_task));
+                    process_save_state(AS_PROCESS(last_task));
                 } else if (IS_KTHREAD(active_task)) {
                     os_printf("Scheduling active thread.................................................................................................\n");  
                     if (active_task == next_task) {
@@ -416,7 +411,7 @@ void __sched_dispatch(void) {
                 if (AS_PROCESS(active_task)->type != 1){//is process
                     vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
                     __sched_emit_messages();
-                    load_process_state(AS_PROCESS(active_task)); // continue with the next process
+                    process_load_state(AS_PROCESS(active_task)); // continue with the next process
                 } else if (IS_KTHREAD(active_task)) {
 
                     __sched_emit_messages();
@@ -455,6 +450,7 @@ uint32_t sched_add_task(sched_task * task) {
         hmap_put(all_tasks_map, active_task->tid, active_task);
             os_printf("Adding task..............................................................\n");
 
+<<<<<<< HEAD
         if (IS_PROCESS(active_task)) {
             vm_enable_vas(AS_PROCESS(active_task)->stored_vas);
         } else if (IS_KTHREAD(active_task)) {
@@ -466,6 +462,8 @@ uint32_t sched_add_task(sched_task * task) {
            // __sched_dispatch();
         }
 
+=======
+>>>>>>> 81d3b416a4a6f9f97d39de0dac0cbe0fc06749ec
         return active_task->tid;
     }
 

@@ -39,7 +39,6 @@ kthread_handle* kthread_create(kthread_callback_handler cb_handler, void* args)
 
 	//Put arguments on the stack here
 	printf("THREAD CREATE ARG VALUE %d\n", (uint32_t)args);
-	//Need to add this to the stack
 	kthread->R13 = (uint32_t) args;
 
 	kthread_start(kthread);

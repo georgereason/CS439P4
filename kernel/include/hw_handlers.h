@@ -56,6 +56,9 @@
 #define SYSCALL_ACTIVE_TASK 18
 #define SYSCALL_GET_THREADID 19
 #define SYSCALL_DUMMY 99
+#define SYSCALL_EXIT 100
+#define SYSCALL_WRITEV 101
+#define SYSCALL_PAUSE 102
 
 void init_vector_table(void); 
 

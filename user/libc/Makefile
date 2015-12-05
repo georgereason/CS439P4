@@ -38,7 +38,7 @@ OBJS=stdio/printf.o \
      file_system/fs_syscalls.o \
      thread/thread.o
 
-CFLAGS = -Os -pipe
+CFLAGS += -Os -pipe
 CFLAGS += -std=c99 -ffreestanding -nostdinc
 CFLAGS += -D_XOPEN_SOURCE=700
 
@@ -48,10 +48,10 @@ libc.a: $(OBJS)
 	$(AR) rcs libc.a $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -Iarch/arm -Iinternal -I../include -c -mcpu=arm1176jzf-s $< -o $@
+	$(CC) $(CFLAGS) -Iarch/arm -Iinternal -I../include -c $< -o $@
 
 %.o: %.s
-	$(CC) $(CFLAGS) -Iarch/arm -Iinternal -I../include -c -mcpu=arm1176jzf-s $< -o $@
+	$(CC) $(CFLAGS) -Iarch/arm -Iinternal -I../include -c $< -o $@
 
 clean: 
 	rm -f stdio/*.o
