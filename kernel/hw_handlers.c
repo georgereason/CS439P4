@@ -58,7 +58,29 @@ void reset_handler(void)
 
 void __attribute__((interrupt("UNDEF"))) undef_instruction_handler(void)
 {
+	int spsr, lr;
+
+	asm volatile("mrs %0, spsr" : "=r"(spsr));
+	asm volatile("mov %0, lr" : "=r" (lr));
+
 	os_printf("UNDEFINED INSTRUCTION HANDLER\n");
+
+	int thumb = spsr & 0x20;
+	int pc = thumb ? lr - 0x2 : lr - 0x4;
+
+	int copro = (*(int*)pc & 0xf00000) >> 24;
+
+	if (spsr & 0x20) {
+		os_printf("THUMB mode\n");
+	} else {
+		os_printf("ARM mode\n");
+	}
+	if (spsr & 0x1000000) {
+		os_printf("JAZELLE enabled\n");
+	}
+
+	os_printf("COPRO: %x\n", copro);
+	os_printf("violating instruction (at %x): %x\n", pc, *((int*) pc));
 }
 
 long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
@@ -85,6 +107,10 @@ long __attribute__((interrupt("SWI"))) software_interrupt_handler(void)
 	// System Call Handler
 	switch (callNumber)
 	{
+	case SYSCALL_EXIT:
+		// TODO: remove current process from scheduler
+		for (;;);
+		break;
 	case SYSCALL_DUMMY:
 		return 0L;
 

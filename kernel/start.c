@@ -44,8 +44,6 @@
 
 #define UART0_IMSC (*((volatile uint32_t *)(UART0_ADDRESS + 0x038)))
 
-extern int init_all_processes();
-
 void uart_handler(void *null)
 {
 	print_uart0("uart0!\n");
@@ -131,7 +129,6 @@ void start2(uint32_t *p_bootargs)
 	// init_q();
 	//main();
 
-	while (1) {
-		asm volatile("wfi");
-	}
+
+	SLEEP;
 }

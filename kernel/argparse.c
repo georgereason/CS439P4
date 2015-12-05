@@ -77,8 +77,9 @@ static void argparse_parse(char *cmdline)
 		{
 			char* name = os_strtok(NULL, " ");
 
-			uint32_t start = PROC_LOCATION;
-			uint32_t len = 0;
+			pcb* proc = process_create(name);
+			assert(proc != NULL);
+			process_execute(proc);
 
 			os_printf("LOADING PROCESS <<%s>>, start address %X\n",
 					name, start, len);
